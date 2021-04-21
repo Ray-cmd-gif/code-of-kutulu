@@ -1,32 +1,103 @@
 function BoardGame(h,w){
   this.heigth = h
   this.width = w
-  this.map = ''
-  this.sepRow = '\n'
-  this.valuesOfTile = {name:'',value:''}
+  this.mapString = ''
+  this.rowSeparator = '|'
+  this.map=[]
+
 }
 
 BoardGame.prototype.addLine = function(line){
-  this.map+= this.map == '' ? line : this.sepRow + line
+  this.mapString+= this.mapString == '' ? line : this.sepRow + line
 }
+
+BoardGame.prototype.getPosition = function(x,y){
+  if(x<0 || x>this.width || y<0 || y>this.heigth){ console.error('error the position is not exist')}
+  var pos = this.map[y][x]
+  return this.map[y][x]
+}
+
+BoardGame.prototype.getAdjPositions = function(position){
+
+}
+
+
+BoardGame.prototype.getRow = function(numRow){
+
+}
+
+BoardGame.prototype.getColumn = function(numCol){
+
+}
+
+
 
 BoardGame.prototype.print = function(){
   console.log('map : ')
-  var rows=this.map.split(this.sepRow)
+  var rows=this.mapString.split(this.rowSeparator)
   for(var i=0;i<rows.length;++i){
     console.log(rows[i])
   }
 }
 
 BoardGame.prototype.init = function(){
-
-  for(var i=0;i<this.heigth;++i){
-      //var line =
+  var map=[]
+  var id=0
+  var rows = this.mapString.split('|')
+  for(var i=0;i<rows.length;++i){
+    var row = []
+    for(var j=0;j<rows[i].length;++j){
+      row.push(new Position(id,j,i,rows[i][j]))
+      id++
+    }
+    map.push(row)
   }
+  this.map=map
+}
+
+BoardGame.prototype.setMap = function(map){
+  var conform=true
+  var mapTab = map.split('|')
+  //vérification du nb de lignes
+  if(mapTab.length!=this.heigth){
+    console.error('error in setMap. The map specify not have ' + this.heigth + ' rows')
+    conform=false
+  }
+  //vérification du nb de colonnes
+  mapTab.forEach(e=>{
+    if(e.length!=this.width){
+      console.error('error in setMap. The map specify not have ' + this.width + ' columns')
+      conform=false
+    }
+  })
+  if(conform){ this.mapString = map }
 }
 
 
-var board = new BoardGame(4,4)
-board.addLine('....')
-board.print()
-var line = 'maligne'
+function Position(id,x,y,value){
+  this.id=id
+  this.x=x
+  this.y=y
+  this.value=value
+}
+
+Position.prototype.getAdj = function(map){
+  //down
+  if(this.y<map.length){
+    this.down=map[this.y+1][this.x].id
+  }
+}
+
+var boardMap = ''
+boardMap+="#...|"
+boardMap+="#...|"
+boardMap+="....|"
+boardMap+="....|"
+boardMap+="...."
+
+var board = new BoardGame(5,4)
+board.setMap(boardMap)
+board.init()
+var pos = board.getPosition(0,0)
+pos.getAdj(board.map)
+console.log(board.map)
