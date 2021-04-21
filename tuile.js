@@ -1,3 +1,7 @@
+/*------------------------------------------------------------------------------
+  BOARD GAME
+------------------------------------------------------------------------------*/
+
 function BoardGame(h,w){
   this.heigth = h
   this.width = w
@@ -17,11 +21,6 @@ BoardGame.prototype.getPosition = function(x,y){
   return this.map[y][x]
 }
 
-BoardGame.prototype.getAdjPositions = function(position){
-
-}
-
-
 BoardGame.prototype.getRow = function(numRow){
 
 }
@@ -33,7 +32,7 @@ BoardGame.prototype.getColumn = function(numCol){
 
 
 BoardGame.prototype.print = function(){
-  console.log('map : ')
+  console.log('--------------------------map--------------------------')
   var rows=this.mapString.split(this.rowSeparator)
   for(var i=0;i<rows.length;++i){
     console.log(rows[i])
@@ -73,6 +72,9 @@ BoardGame.prototype.setMap = function(map){
   if(conform){ this.mapString = map }
 }
 
+/*------------------------------------------------------------------------------
+  POSITION
+------------------------------------------------------------------------------*/
 
 function Position(id,x,y,value){
   this.id=id
@@ -83,11 +85,20 @@ function Position(id,x,y,value){
 
 Position.prototype.getAdj = function(map){
   //down
-  if(this.y<map.length){
-    this.down=map[this.y+1][this.x].id
-  }
+  if(this.y<map.length){ this.down=map[this.y+1][this.x] }
+  //up
+  if(this.y>0){ this.up=map[0][this.x] }
+  //left
+  if(this.x>0){ this.left=map[this.y][0] }
+  //right
+  if(this.x<map[0].length){ this.right=map[this.y][this.x+1] }
 }
 
+
+
+/*------------------------------------------------------------------------------
+  MAIN
+------------------------------------------------------------------------------*/
 var boardMap = ''
 boardMap+="#...|"
 boardMap+="#...|"
@@ -98,6 +109,7 @@ boardMap+="...."
 var board = new BoardGame(5,4)
 board.setMap(boardMap)
 board.init()
-var pos = board.getPosition(0,0)
+var pos = board.getPosition(1,1)
 pos.getAdj(board.map)
-console.log(board.map)
+console.log(pos.down.id)
+board.print()
